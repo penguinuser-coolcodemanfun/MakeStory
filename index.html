@@ -1,131 +1,97 @@
-<h5>Small codes to learn from!<h3>
-
-credits to w3 schools for dark mode
-
-
-<p>Dark mode:<p>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body {
-  padding: 25px;
-  background-color: white;
-  color: black;
-  font-size: 25px;
-}
-
-.dark-mode {
-  background-color: black;
-  color: white;
-}
-</style>
+﻿
+<link rel="stylesheet" href="styles.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>MakeStory</title>
 </head>
-<body>
-
-
-<div class="fix">
-<button onclick="myFunction()">✅</button>
-</div>
-
-<script>
-function myFunction() {
-   var element = document.body;
-   element.classList.toggle("dark-mode");
-}
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<br>
-<br>
-(i made the spaces between < > so that it does not turn into a script)
-</br>
-</br>
-
-
-
------(on github) by 
-penguinuser-coolcodemanfun ----
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<p>Hi there! Here are some easy html stuff!<p>
-
-
-
-
-<input type="radio"> Radio (Circle choice answering) The code: <p>< input type="radio" ><p>
-
-
-
-
-<input type="button"> Button (Button. Used for anything) The code: <p>< input type="button" ><p>
-
-
-
-<input type="range"> Range (Useful for like ex: Color sliders) The code: <p>< input type="range" ><p>
-
-
-
-
-
-<input type="number"> number (Useful for clock projects) The code: <p>< input type="number" ><p>
-
-
-
-
-
-<input type="text"> text (You can use this for typing in text! ex: SignUp page) The code: <p>< input type="text" ><p>
-
-
-
-<input type="date"> date (Use this for adjusting dates) The code: <p>< input type="date" ><p>
-
-
-
-<input type="file"> file (Import files from your device) The code: <p>< input type="file" ><p>
-
-
-bye guysss!
-
-
-
-
+<body style="font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px;">
+
+    <h1>Make<b>Story</b></h1>
+
+    <!-- Formatting Toolbar -->
+    <div style="margin-bottom: 10px;">
+        <button onclick="formatText('bold')"><b>B</b></button>
+        <button onclick="formatText('italic')"><i>I</i></button>
+        <select onchange="formatText('fontSize', this.value)">
+            <option value="">Font Size</option>
+            <option value="2">Small</option>
+            <option value="4">Normal</option>
+            <option value="6">Large</option>
+        </select>
+        <input type="color" onchange="formatText('foreColor', this.value)" />
+    </div>
+
+    <!-- Title & Editor -->
+    <input type="text" id="title" placeholder="Story Title" style="width:100%; padding:10px; font-size:16px; margin-bottom:10px;" />
+    <div id="editor" contenteditable="true" style="width:100%; min-height:150px; padding:10px; background:white; border:1px solid #ccc;"></div>
+    <button onclick="saveStory()" style="margin-top:10px;">Save Story</button>
+
+    <!-- Saved Stories -->
+    <h2>Saved Stories</h2>
+    <div id="stories"></div>
+
+    <script>
+        function formatText(command, value = null) {
+            document.execCommand(command, false, value);
+            document.getElementById('editor').focus();
+        }
+
+        function saveStory() {
+            const title = document.getElementById('title').value.trim();
+            const content = document.getElementById('editor').innerHTML.trim();
+            if (!title || !content) {
+                alert("Please enter both a title and some content.");
+                return;
+            }
+            const stories = JSON.parse(localStorage.getItem('stories') || '[]');
+            stories.push({ title, content, likes: 0, dislikes: 0 });
+            localStorage.setItem('stories', JSON.stringify(stories));
+            document.getElementById('title').value = '';
+            document.getElementById('editor').innerHTML = '';
+            renderStories();
+        }
+
+        function deleteStory(index) {
+            const stories = JSON.parse(localStorage.getItem('stories') || '[]');
+            stories.splice(index, 1);
+            localStorage.setItem('stories', JSON.stringify(stories));
+            renderStories();
+        }
+
+        function voteStory(index, type) {
+            const stories = JSON.parse(localStorage.getItem('stories') || '[]');
+            if (type === 'like') stories[index].likes++;
+            if (type === 'dislike') stories[index].dislikes++;
+            localStorage.setItem('stories', JSON.stringify(stories));
+            renderStories();
+        }
+
+        function renderStories() {
+            const container = document.getElementById('stories');
+            container.innerHTML = '';
+            const stories = JSON.parse(localStorage.getItem('stories') || '[]');
+            stories.forEach((story, index) => {
+                const div = document.createElement('div');
+                div.style.background = '#fff';
+                div.style.padding = '10px';
+                div.style.marginBottom = '15px';
+                div.style.borderLeft = '4px solid #0078D7';
+                div.innerHTML = `
+              <h3>${story.title}</h3>
+              <div>${story.content}</div>
+              <div style="margin-top: 10px;">
+                <button onclick="voteStory(${index}, 'like')">👍 Like (${story.likes})</button>
+                <button onclick="voteStory(${index}, 'dislike')">👎 Dislike (${story.dislikes})</button>
+                <button onclick="deleteStory(${index})" style="float: right;">🗑 Delete</button>
+              </div>
+            `;
+                container.appendChild(div);
+            });
+        }
+
+        renderStories();
+    </script>
+</body>
+</html>

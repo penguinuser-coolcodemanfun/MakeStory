@@ -1,0 +1,37 @@
+﻿body
+{
+    background-color: green;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+}
+
+
+
+ button {
+     background-color: dodgerblue;
+    font-size: 30px;
+    border: ridge 5px black;
+
+   
+    }
+
+    button:hover {
+        background-color: deepskyblue;
+        cursor: pointer;
+        border: groove 5px yellow;
+    }
+
+    select 
+    {
+        background-color:deepskyblue;
+        font-size: larger;
+       cursor: default;
+        
+    }
+
+select:hover {
+    background-color: dodgerblue;
+    font-size: larger;
+    cursor: pointer;
+    border: solid 2px;
+} 
+
